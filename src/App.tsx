@@ -170,6 +170,7 @@ export default function App() {
   const [rawPlayersInput, setRawPlayersInput] = useState('');
   const [revealEvents, setRevealEvents] = useState<RevealEvent[]>([]);
   const [revealedCount, setRevealedCount] = useState(0);
+  const [inductionOverlayDismissed, setInductionOverlayDismissed] = useState(false);
 
   const [isMuted, setIsMuted] = useState(false);
 
@@ -223,6 +224,7 @@ export default function App() {
     });
 
     setRevealedCount(-1);
+    setInductionOverlayDismissed(false);
     setRevealEvents(events);
     setTribes(newTribes);
     setCurrentView('teams');
@@ -262,7 +264,7 @@ export default function App() {
           const tribe = tribes.find(t => t.playerIds.includes(currentEvent.playerId));
           const isLastInTribe = tribe?.playerIds[tribe.playerIds.length - 1] === currentEvent.playerId;
           
-          if (isLastInTribe && revealedCount < total - 1) {
+          if (isLastInTribe) {
             delay = 8000; // Longer pause after tribe is filled
           }
         }
@@ -841,6 +843,89 @@ export default function App() {
                   }
 
                   // Tribe Complete Overlay (REMOVED: Now integrated into card background)
+                  
+                  // Final Completion Overlay
+                  if (isAllRevealed && totalEvents > 0 && !inductionOverlayDismissed) {
+                    return (
+                      <motion.div
+                        key="final-completion"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-stone-950/80 backdrop-blur-md"
+                      >
+                        {/* Celebration Dancing Group */}
+                        <div className="absolute inset-0 flex items-end justify-around pb-20 opacity-40">
+                          <DancingSilhouette color="#f59e0b" delay={0} scale={1.5} />
+                          <DancingSilhouette color="#ef4444" delay={0.2} scale={1.3} />
+                          <DancingSilhouette color="#3b82f6" delay={0.4} scale={1.6} />
+                          <DancingSilhouette color="#10b981" delay={0.1} scale={1.4} />
+                          <DancingSilhouette color="#8b5cf6" delay={0.3} scale={1.5} />
+                        </div>
+
+                        <motion.div
+                          initial={{ scale: 0.5, opacity: 0, y: 50 }}
+                          animate={{ scale: 1, opacity: 1, y: 0 }}
+                          transition={{ 
+                            type: "spring",
+                            damping: 12,
+                            stiffness: 100
+                          }}
+                          className="relative z-10 text-center px-6"
+                        >
+                          <motion.div
+                            animate={{ rotate: [0, -5, 5, -5, 0] }}
+                            transition={{ duration: 4, repeat: Infinity }}
+                            className="mb-8 flex justify-center"
+                          >
+                            <TikiGuard color="#fca311" />
+                          </motion.div>
+
+                          <h2 className="font-display text-4xl md:text-6xl text-sand tracking-[0.3em] mb-4 uppercase drop-shadow-xl">
+                            TRIBE INDUCTION
+                          </h2>
+                          <h1 className="font-display text-7xl md:text-9xl text-amber-500 tracking-[0.1em] uppercase drop-shadow-[0_0_30px_rgba(245,158,11,0.5)]">
+                            COMPLETE
+                          </h1>
+
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ delay: 0.5, duration: 1 }}
+                            className="h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent mt-8"
+                          />
+                          
+                          <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-12">
+                            <motion.button
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 1.5 }}
+                              onClick={() => {
+                                setInductionOverlayDismissed(true);
+                              }}
+                              className="px-10 py-4 bg-amber-600 hover:bg-amber-500 text-white font-display tracking-widest uppercase rounded-full transition-colors shadow-lg hover:shadow-amber-500/20 pointer-events-auto"
+                            >
+                              Show Tribe List
+                            </motion.button>
+
+                            <motion.button
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 1.7 }}
+                              onClick={() => {
+                                setCurrentView('roster');
+                                setRevealedCount(-1);
+                                setInductionOverlayDismissed(false);
+                              }}
+                              className="px-8 py-3 bg-stone-800 hover:bg-stone-700 text-sand/80 hover:text-sand font-display tracking-widest uppercase rounded-full transition-colors pointer-events-auto text-sm"
+                            >
+                              Back to Entrance
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      </motion.div>
+                    );
+                  }
                   
                   // For intro splash
                   if (currentEvent?.type === 'TRIBE_INTRO' && !isAllRevealed) {
