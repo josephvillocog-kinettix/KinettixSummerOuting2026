@@ -89,12 +89,12 @@ type RevealEvent =
 
 // --- Constants ---
 const TRIBAL_COLORS = [
-  { name: 'Red Tribe', value: '#e11d48', icon: 'Flame' as const },
-  { name: 'Blue Tribe', value: '#0ea5e9', icon: 'Waves' as const },
-  { name: 'Green Tribe', value: '#16a34a', icon: 'Palmtree' as const },
-  { name: 'Gold Tribe', value: '#f97316', icon: 'Sun' as const },
-  { name: 'Purple Tribe', value: '#d946ef', icon: 'Skull' as const },
-  { name: 'Stone Tribe', value: '#57534e', icon: 'Anchor' as const },
+  { name: 'Voyagers', value: '#e11d48', icon: 'Flame' as const },
+  { name: 'StormBreakers', value: '#0ea5e9', icon: 'Waves' as const },
+  { name: 'Keepers', value: '#16a34a', icon: 'Palmtree' as const },
+  { name: 'Guardians', value: '#f97316', icon: 'Sun' as const },
+  { name: 'Raiders', value: '#d946ef', icon: 'Skull' as const },
+  { name: 'PathFinders', value: '#57534e', icon: 'Anchor' as const },
 ];
 
 const GENDERS: Gender[] = ['Male', 'Female', 'Other'];
@@ -500,12 +500,20 @@ export default function App() {
                       key={tribe.id}
                       className="p-6 rounded-2xl bg-stone-950/40 border-2 border-stone-800 flex items-center gap-5 group/item hover:border-stone-700 transition-all shadow-md"
                     >
-                      <div 
-                        className="w-12 h-12 rounded-full border-4 border-stone-800 flex items-center justify-center shadow-lg"
-                        style={{ backgroundColor: tribe.color }}
-                      >
-                         <TribeIconComponent icon={tribe.icon} size={20} className="text-white" />
-                      </div>
+                      <label className="relative cursor-pointer group/color">
+                        <input 
+                          type="color"
+                          value={tribe.color}
+                          onChange={(e) => setTribes(tribes.map(t => t.id === tribe.id ? { ...t, color: e.target.value } : t))}
+                          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+                        />
+                        <div 
+                          className="w-12 h-12 rounded-full border-4 border-stone-800 flex items-center justify-center shadow-lg transition-transform group-hover/color:scale-110"
+                          style={{ backgroundColor: tribe.color }}
+                        >
+                           <TribeIconComponent icon={tribe.icon} size={20} className="text-white" />
+                        </div>
+                      </label>
                       <div className="flex-grow grid grid-cols-1 gap-1">
                         <input 
                           placeholder="Tribe Name"
@@ -513,7 +521,6 @@ export default function App() {
                           onChange={(e) => setTribes(tribes.map(t => t.id === tribe.id ? { ...t, name: e.target.value } : t))}
                           className="bg-transparent font-display text-2xl text-stone-100 border-b border-stone-800/50 focus:border-lagoon focus:outline-none placeholder:text-stone-800 transition-colors"
                         />
-                        <span className="text-[10px] text-stone-600 font-display tracking-widest uppercase">{tribe.icon} SYMBOL</span>
                       </div>
                     </motion.div>
                   ))}
@@ -652,7 +659,7 @@ export default function App() {
                   >
                     <div className="absolute -inset-2 bg-lagoon blur-xl opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
                     <div className="relative px-16 py-8 bg-stone-950 border-4 border-stone-800 rounded-full transform transition hover:scale-105 active:scale-95 flex items-center gap-6 shadow-2xl hover:border-lagoon">
-                      <Flame className="text-lagoon group-hover:animate-pulse" size={36} />
+                      <Skull className="text-lagoon group-hover:animate-pulse" size={36} />
                       <span className="font-display text-4xl text-stone-100 tracking-[0.3em]">START RITUAL</span>
                     </div>
                   </button>
