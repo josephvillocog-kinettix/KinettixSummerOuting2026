@@ -1784,151 +1784,141 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                {/* Tribe Balance Chart */}
-                <div className="survivor-card p-10">
-                  <h3 className="font-display text-2xl text-stone-100 mb-8 flex items-center gap-4">
-                    <Shield size={24} className="text-torch-orange" /> POWER DISTRIBUTION
-                  </h3>
-                  <div className="h-[400px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={statsData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#292524" />
-                        <XAxis 
-                          dataKey="name" 
-                          axisLine={{ stroke: '#292524' }} 
-                          tick={{ fill: '#78716c', fontFamily: 'Staatliches', fontSize: 16 }} 
-                        />
-                        <YAxis 
-                          axisLine={{ stroke: '#292524' }} 
-                          tick={{ fill: '#78716c', fontFamily: 'monospace' }} 
-                        />
-                        <Tooltip 
-                          cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
-                          contentStyle={{ backgroundColor: '#1c1917', border: '1px solid #44403c', borderRadius: '4px', color: '#d6d3d1' }}
-                        />
-                        <Legend iconType="rect" />
-                        <Bar name="Male" dataKey="Male" stackId="a" fill="#0369a1" />
-                        <Bar name="Female" dataKey="Female" stackId="a" fill="#9f1239" />
-                        <Bar name="Other Gender" dataKey="Other" stackId="a" fill="#44403c" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Category Distribution Chart */}
-                <div className="survivor-card p-10">
-                  <h3 className="font-display text-2xl text-stone-100 mb-8 flex items-center gap-4">
-                    <Sun size={24} className="text-amber-500" /> CATEGORY DISTRIBUTION
-                  </h3>
-                  <div className="h-[400px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={statsData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#292524" />
-                        <XAxis 
-                          dataKey="name" 
-                          axisLine={{ stroke: '#292524' }} 
-                          tick={{ fill: '#78716c', fontFamily: 'Staatliches', fontSize: 16 }} 
-                        />
-                        <YAxis 
-                          axisLine={{ stroke: '#292524' }} 
-                          tick={{ fill: '#78716c', fontFamily: 'monospace' }} 
-                        />
-                        <Tooltip 
-                          cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
-                          contentStyle={{ backgroundColor: '#1c1917', border: '1px solid #44403c', borderRadius: '4px', color: '#d6d3d1' }}
-                        />
-                        <Legend iconType="rect" />
-                        <Bar name="Standard" dataKey="Standard" stackId="role" fill="#10b981" />
-                        <Bar name="Supervisor" dataKey="Supervisor" stackId="role" fill="#b45309" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Overall Roster Pie */}
-                <div className="survivor-card p-10">
-                  <h3 className="font-display text-2xl text-stone-100 mb-8 flex items-center gap-4">
-                    <Users size={24} className="text-torch-orange" /> GENDER EQUITY SCAN
-                  </h3>
-                  <div className="h-[400px] relative">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={genderDistribution}
-                          innerRadius={110}
-                          outerRadius={150}
-                          paddingAngle={8}
-                          dataKey="value"
-                          stroke="none"
-                        >
-                          {genderDistribution.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.name === 'Male' ? '#0369a1' : entry.name === 'Female' ? '#9f1239' : '#44403c'} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                       <span className="font-display text-4xl text-stone-800">{players.length}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Individual Tribe Insights */}
+              {/* Advanced Survivor Vitals Table */}
               <div className="space-y-6">
-                <h3 className="font-display text-3xl text-stone-100 tracking-widest border-b border-[#292524] pb-4">TRIBAL VITAL SIGNS</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {statsData.map((tribeStat, idx) => (
-                    <motion.div 
-                      key={tribeStat.name}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: idx * 0.1 }}
-                      viewport={{ once: true }}
-                      className="p-6 bg-stone-900/50 border border-[#292524] rounded-lg relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 right-0 w-16 h-16 opacity-5 rotate-12 -mr-4 -mt-4">
-                        <TribeIconComponent icon={tribeStat.icon} size={64} style={{ color: tribeStat.color }} />
-                      </div>
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-display text-2xl text-stone-100 uppercase tracking-tighter" style={{ color: tribeStat.color }}>{tribeStat.name}</h4>
-                        <span className="bg-stone-800 text-stone-400 px-2 py-0.5 rounded text-[10px] font-mono">ID: {idx + 1}</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-stone-500 uppercase tracking-widest">Strength</span>
-                          <span className="text-2xl font-display text-stone-200">{tribeStat.total}</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-stone-500 uppercase tracking-widest">Ratio</span>
-                          <span className="text-sm font-display text-stone-400">
-                             {tribeStat.Male}M / {tribeStat.Female}F
-                          </span>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex gap-1 h-1 rounded-full overflow-hidden">
-                        <div style={{ width: `${(tribeStat.Male / tribeStat.total) * 100}%`, backgroundColor: '#0369a1' }} />
-                        <div style={{ width: `${(tribeStat.Female / tribeStat.total) * 100}%`, backgroundColor: '#9f1239' }} />
-                        <div style={{ width: `${(tribeStat.Other / tribeStat.total) * 100}%`, backgroundColor: '#44403c' }} />
-                      </div>
-                    </motion.div>
-                  ))}
+                <div className="flex items-center justify-between border-b border-stone-800 pb-4">
+                  <h3 className="font-display text-3xl text-stone-100 tracking-widest">SURVIVOR VITALS & WIT</h3>
+                  <div className="px-4 py-1 bg-torch-orange/10 border border-torch-orange/20 rounded-full">
+                    <span className="text-[10px] font-display text-torch-orange uppercase tracking-[0.2em]">Live Simulation Data</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Wisdom Section */}
-              <div className="bg-stone-900 border-l-8 border-torch-orange p-10 flex gap-8 items-center shadow-2xl">
-                <div className="p-5 bg-stone-800 border border-stone-700 rounded-full">
-                   <Info size={40} className="text-torch-orange" />
-                </div>
-                <div>
-                  <h4 className="font-display text-3xl text-stone-100 tracking-widest mb-3">THE ANCIENT ALGORITHM</h4>
-                  <p className="font-hand text-2xl text-stone-500 italic max-w-3xl leading-relaxed">
-                    "Balance is key to survival. We cluster each gender identity then rotate them through the tribes. No tribe shall carry more weight than another. Equality is the seed of true competition."
-                  </p>
+                <div className="hawaiian-card overflow-hidden border-stone-800/40 bg-stone-900/20 backdrop-blur-sm">
+                  <div className="overflow-x-auto custom-scrollbar">
+                    <table className="w-full text-left font-display">
+                      <thead>
+                        <tr className="bg-stone-950/60 text-stone-500 text-[10px] tracking-[0.3em] uppercase">
+                          <th className="px-8 py-5">Survivor</th>
+                          <th className="px-8 py-5">Tribe</th>
+                          <th className="px-8 py-5">Island Reputation</th>
+                          <th className="px-8 py-5">Power Vitals</th>
+                          <th className="px-8 py-5 text-right">Survival %</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-800/40">
+                        {(() => {
+                          const WITTY_DESCRIPTIONS = [
+                            "Can ignite a fire with just a stern look.",
+                            "Able to camouflage as a palm tree for up to 4 hours.",
+                            "Primary diet consists of coconut water and sheer ambition.",
+                            "Has a secret strategic alliance with a local hermit crab.",
+                            "Can solve a slide puzzle faster than they can find their keys.",
+                            "Speaks fluent Seagull and moderate Crab.",
+                            "Survived 3 days on nothing but willpower and one grape.",
+                            "Challenged the sun to a staring contest. The sun blinked first.",
+                            "Navigates the jungle using only the smell of distant coffee.",
+                            "Has 'Hidden Immunity Idol' vibes but it's just a cool rock.",
+                            "Legend says they once outrun a falling coconut.",
+                            "Can detect a betrayal from three islands away.",
+                            "Tactical genius. Specialized in bamboo-based architecture.",
+                            "Expert at avoiding eye contact during Tribal Council.",
+                            "Actually just here for the free island tan.",
+                            "Can weave a waterproof hammock using only sarcasm.",
+                            "Possesses the agility of a panther... after coffee.",
+                            "Once argued with a parrot and won the debate."
+                          ];
+
+                          const getPlayerStats = (id: string) => {
+                            // Seeded pseudo-randomness based on ID string
+                            const seed = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                            const getVal = (offset: number) => 60 + ((seed * offset) % 40);
+                            
+                            return {
+                              strength: getVal(7),
+                              agility: getVal(13),
+                              intel: getVal(19),
+                              spirit: getVal(23),
+                              description: WITTY_DESCRIPTIONS[seed % WITTY_DESCRIPTIONS.length]
+                            };
+                          };
+
+                          return players.map((player, pIdx) => {
+                            const tribe = tribes.find(t => t.playerIds.includes(player.id));
+                            if (!tribe) return null;
+                            const stats = getPlayerStats(player.id);
+                            
+                            return (
+                              <motion.tr 
+                                key={player.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ delay: pIdx * 0.02 }}
+                                viewport={{ once: true }}
+                                className="hover:bg-stone-800/40 transition-colors group/row"
+                              >
+                                <td className="px-8 py-6">
+                                  <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-full bg-stone-950 border-2 border-stone-800 flex items-center justify-center text-stone-500 font-mono text-xs group-hover/row:border-sand transition-colors">
+                                      {pIdx + 1}
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-xl text-stone-100 group-hover/row:text-sand transition-colors">{player.name}</span>
+                                      <div className="flex items-center gap-2 mt-1">
+                                        {player.gender === 'Male' ? <Mars size={12} className="text-sky-400" /> : player.gender === 'Female' ? <Venus size={12} className="text-rose-400" /> : <MoreHorizontal size={12} className="text-stone-500" />}
+                                        <span className="text-[9px] text-sand/60 uppercase tracking-widest">Sup: {player.supervisorName || '—'}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-8 py-6">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: tribe.color }} />
+                                    <span className="text-stone-300 tracking-widest text-sm uppercase">{tribe.name}</span>
+                                  </div>
+                                </td>
+                                <td className="px-8 py-6 max-w-xs">
+                                  <p className="font-hand text-lg text-sand/70 leading-tight italic">"{stats.description}"</p>
+                                </td>
+                                <td className="px-8 py-6">
+                                  <div className="flex flex-col gap-2 w-48">
+                                    <div className="flex items-center justify-between text-[9px] uppercase tracking-tighter text-stone-500">
+                                      <span>STR / AGI / INT</span>
+                                      <span>{Math.round((stats.strength + stats.agility + stats.intel) / 3)} MAX</span>
+                                    </div>
+                                    <div className="flex gap-1 h-1.5 w-full">
+                                      <div title={`Strength: ${stats.strength}`} className="h-full rounded-l-full bg-torch-red" style={{ width: `${stats.strength/3}%` }} />
+                                      <div title={`Agility: ${stats.agility}`} className="h-full bg-lagoon" style={{ width: `${stats.agility/3}%` }} />
+                                      <div title={`Intelligence: ${stats.intel}`} className="h-full rounded-r-full bg-sky-500" style={{ width: `${stats.intel/3}%` }} />
+                                    </div>
+                                    <div className="flex items-center gap-4 mt-1">
+                                      <div className="flex items-center gap-1">
+                                        <div className="w-1 h-1 rounded-full bg-torch-red" />
+                                        <span className="text-[8px] text-stone-500">S:{stats.strength}</span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <div className="w-1 h-1 rounded-full bg-lagoon" />
+                                        <span className="text-[8px] text-stone-500">A:{stats.agility}</span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <div className="w-1 h-1 rounded-full bg-sky-500" />
+                                        <span className="text-[8px] text-stone-500">I:{stats.intel}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-8 py-6 text-right">
+                                  <div className="inline-flex flex-col items-end">
+                                    <span className="text-2xl text-stone-100 font-mono tracking-tighter">{stats.spirit}%</span>
+                                    <span className="text-[8px] text-stone-500 uppercase tracking-widest">Fortitude</span>
+                                  </div>
+                                </td>
+                              </motion.tr>
+                            );
+                          });
+                        })()}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </motion.div>
