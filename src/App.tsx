@@ -30,6 +30,7 @@ import {
   Wind,
   Bird,
   Waves,
+  Search,
   Sprout as Flower,
   Mars,
   Venus,
@@ -37,7 +38,9 @@ import {
   Download,
   Cloud,
   Loader2,
-  Check
+  Check,
+  Play,
+  LayoutGrid
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -178,8 +181,21 @@ export default function App() {
   const [revealedCount, setRevealedCount] = useState(0);
   const [inductionOverlayDismissed, setInductionOverlayDismissed] = useState(false);
   const [selectedTribeId, setSelectedTribeId] = useState<string | null>(null);
+  const [vitalsSearch, setVitalsSearch] = useState('');
+  const [isPlayMode, setIsPlayMode] = useState(false);
+  const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
 
   const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (isPlayMode) {
+      interval = setInterval(() => {
+        setCurrentPlayIndex(prev => prev + 1);
+      }, 6000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlayMode]);
 
   const audio = useMemo(() => {
     const a = new Audio('https://assets.mixkit.co/music/preview/mixkit-tribal-ritual-558.mp3');
@@ -655,7 +671,12 @@ export default function App() {
                                 supervisorName = extra1;
                               }
                               
-                              return { id: crypto.randomUUID(), name, gender, category, supervisorName };
+                              let finalGender = gender;
+                              if (name.toUpperCase() === "RIFFY CAMPO") {
+                                finalGender = 'Female';
+                              }
+                              
+                              return { id: crypto.randomUUID(), name, gender: finalGender, category, supervisorName };
                             });
                             setPlayers([...players, ...newPlayers]);
                             setRawPlayersInput('');
@@ -1776,7 +1797,92 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-10"
             >
-              <div className="flex flex-col gap-2">
+              {(() => {
+                const WITTY_DESCRIPTIONS = [
+                  "Can ignite a fire with just a stern look.",
+                  "Able to camouflage as a palm tree for up to 4 hours.",
+                  "Primary diet consists of coconut water and sheer ambition.",
+                  "Has a secret strategic alliance with a local hermit crab.",
+                  "Can solve a slide puzzle faster than they can find their keys.",
+                  "Speaks fluent Seagull and moderate Crab.",
+                  "Survived 3 days on nothing but willpower and one grape.",
+                  "Challenged the sun to a staring contest. The sun blinked first.",
+                  "Navigates the jungle using only the smell of distant coffee.",
+                  "Has 'Hidden Immunity Idol' vibes but it's just a cool rock.",
+                  "Legend says they once outrun a falling coconut.",
+                  "Can detect a betrayal from three islands away.",
+                  "Tactical genius. Specialized in bamboo-based architecture.",
+                  "Expert at avoiding eye contact during Tribal Council.",
+                  "Actually just here for the free island tan.",
+                  "Can weave a waterproof hammock using only sarcasm.",
+                  "Possesses the agility of a panther... after coffee.",
+                  "Once argued with a parrot and won the debate."
+                ];
+
+                const getPlayerStats = (player: any) => {
+                  const seed = player.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                  const getVal = (offset: number) => 60 + ((seed * offset) % 40);
+                  
+                  // Specific Custom Descriptions
+                  let description = WITTY_DESCRIPTIONS[seed % WITTY_DESCRIPTIONS.length];
+                  if (player.name === "Margaux Kylie Cañete" || player.name === "Margaux Canete") {
+                    description = "Former title holder of Miss Carcar 2024. Currently defending her crown against a highly judgmental group of seagulls.";
+                  } else if (player.name === "Marvin Keith Tan") {
+                    description = "Richest man in Kinettix. Elon Musk of Cebu. Currently negotiating an acquisition of the Pacific Ocean while optimizing his hydration-to-hustle ratios.";
+                  } else if (player.name === "Ariel Tabacolde") {
+                    description = "A person who brushes his teeth 10 times a day. Has the brightest smile in the archipelago and can blind opponents during challenges with a single grin.";
+                  } else if (player.name === "Jennelyn Oporto") {
+                    description = "Recently won the title Little Miss Bacayan 2026. Her strategic brilliance is only matched by her ability to negotiate peace between feuding island monkeys.";
+                  } else if (player.name === "WhiteMillen Ponsica") {
+                    description = "Can perform accounting using roman numerals in Braille System. Can audit the entire island's coconut inventory while blindfolded and submerged in salt water.";
+                  } else if (player.name === "Jason Mondejar") {
+                    description = "Former title holder of Mister Compostela 2024. All the girls from lapu lapu city loves him. Currently considering a move into aquatic fashion design.";
+                  } else if (player.name === "Fionah Sophia Monisit") {
+                    description = "Former Sinulog Queen of 2025, she can dance the ghosts away. Her footwork is so fast she can actually walk on coconut milk.";
+                  } else if (player.name === "Michael Amores") {
+                    description = "She hates exercise, but does it anyway in her mind. A gold medalist in mental marathons and hypothetical heavy lifting.";
+                  } else if (player.name === "Benny Ong") {
+                    description = "Unofficial and hidden member of the P-Pop Girl Group BINI. Often seen practicing choreographies with confused hermit crabs under the moonlight.";
+                  } else if (player.name === "Neil Joshua Paradero") {
+                    description = "He loves to perform during christmass parties. Once sang Jingle Bells so passionately that a tropical storm decided to skip the island.";
+                  } else if (player.name === "Mil Matthew Malinao") {
+                    description = "Soon to be groom. Already practicing his 'I do' while dodging falling coconuts and sand-fly invasions.";
+                  } else if (player.name === "Riffy Campo") {
+                    description = "The most popular governor in Kinettix. Her campaign platform consists entirely of 'More Coconuts for Everyone' and 'Mandatory Island Siestas'.";
+                  } else if (player.name === "Catherine Ballena") {
+                    description = "The dancing zumba queen of Kinettix. Can maintain a perfect squat while balance-testing a tribe's strategic alliance.";
+                  } else if (player.name === "Kein Negre") {
+                    description = "Can summit mount busay by running backwards with one foot. Currently using this skill to retreat from complex social situations and incoming Tribal Councils.";
+                  } else if (player.name === "Klyde Elydom Etang") {
+                    description = "His inspiration is from his multiple children. He has mastered the art of lightning-fast reflexes, primarily from years of catching falling juice boxes and dodging airborne LEGO bricks.";
+                  } else if (player.name === "Carmel Grace Basalo") {
+                    description = "Pickleball pro player, part time accountant. Can calculate your taxes while delivering a 60mph serve. If you see her with a paddle and a ledger, run.";
+                  } else if (player.name === "Mary Louise Duaban") {
+                    description = "Can perform accounting with her eyes closed and hands tied behind her back. She’s currently auditing the wind to ensure the trade winds are staying within budget.";
+                  } else if (player.name === "Crystel Mae Pontino") {
+                    description = "Most successful businesswoman in Kinettix. She can turn a handful of sand into a profitable resort chain before the tide even comes in.";
+                  } else if (player.name === "Cecilio Ramirez") {
+                    description = "Successful food entrepreneur. He can whip up a five-course gourmet meal using only a rusty spoon, a coconut, and sheer willpower.";
+                  }
+                  
+                  return {
+                    strength: getVal(7),
+                    agility: getVal(13),
+                    intel: getVal(19),
+                    spirit: getVal(23),
+                    description
+                  };
+                };
+
+                const filteredPlayers = players.filter(p => {
+                  const searchLower = vitalsSearch.toLowerCase();
+                  return p.name.toLowerCase().includes(searchLower) || 
+                         (p.supervisorName || '').toLowerCase().includes(searchLower);
+                });
+
+                return (
+                  <>
+                    <div className="flex flex-col gap-2">
                 <h2 className="font-display text-5xl text-stone-100 tracking-widest">OUTWIT / OUTPLAY</h2>
                 <div className="flex items-center gap-3 text-stone-500">
                   <BarChart3 size={20} />
@@ -1793,63 +1899,63 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="hawaiian-card overflow-hidden border-stone-800/40 bg-stone-900/20 backdrop-blur-sm">
-                  <div className="overflow-x-auto custom-scrollbar">
-                    <table className="w-full text-left font-display">
-                      <thead>
-                        <tr className="bg-stone-950/60 text-stone-500 text-[10px] tracking-[0.3em] uppercase">
-                          <th className="px-8 py-5">Survivor</th>
-                          <th className="px-8 py-5">Tribe</th>
-                          <th className="px-8 py-5">Island Reputation</th>
-                          <th className="px-8 py-5">Power Vitals</th>
-                          <th className="px-8 py-5 text-right">Survival %</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-stone-800/40">
-                        {(() => {
-                          const WITTY_DESCRIPTIONS = [
-                            "Can ignite a fire with just a stern look.",
-                            "Able to camouflage as a palm tree for up to 4 hours.",
-                            "Primary diet consists of coconut water and sheer ambition.",
-                            "Has a secret strategic alliance with a local hermit crab.",
-                            "Can solve a slide puzzle faster than they can find their keys.",
-                            "Speaks fluent Seagull and moderate Crab.",
-                            "Survived 3 days on nothing but willpower and one grape.",
-                            "Challenged the sun to a staring contest. The sun blinked first.",
-                            "Navigates the jungle using only the smell of distant coffee.",
-                            "Has 'Hidden Immunity Idol' vibes but it's just a cool rock.",
-                            "Legend says they once outrun a falling coconut.",
-                            "Can detect a betrayal from three islands away.",
-                            "Tactical genius. Specialized in bamboo-based architecture.",
-                            "Expert at avoiding eye contact during Tribal Council.",
-                            "Actually just here for the free island tan.",
-                            "Can weave a waterproof hammock using only sarcasm.",
-                            "Possesses the agility of a panther... after coffee.",
-                            "Once argued with a parrot and won the debate."
-                          ];
+                {/* Search & Mode Toggle */}
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                  <div className="relative w-full max-w-md">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-stone-500">
+                      <Search size={18} />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search survivors or supervisors..."
+                      value={vitalsSearch}
+                      onChange={(e) => setVitalsSearch(e.target.value)}
+                      className="w-full bg-stone-900/40 border-2 border-stone-800 rounded-2xl py-3 pl-12 pr-4 text-stone-100 font-display tracking-widest focus:outline-none focus:border-torch-orange/50 transition-all placeholder:text-stone-600"
+                    />
+                  </div>
+                  
+                  <button
+                    onClick={() => setIsPlayMode(!isPlayMode)}
+                    className={cn(
+                      "flex items-center gap-2 px-6 py-3 rounded-2xl font-display tracking-[0.2em] transition-all",
+                      isPlayMode 
+                        ? "bg-stone-800 text-stone-300 border-2 border-stone-700" 
+                        : "bg-torch-orange text-stone-900 border-2 border-torch-orange/50 shadow-[0_0_20px_rgba(249,115,22,0.3)] animate-pulse"
+                    )}
+                  >
+                    {isPlayMode ? <LayoutGrid size={20} /> : <Play size={20} />}
+                    {isPlayMode ? "VIEW TABLE" : "PLAY MODE"}
+                  </button>
+                </div>
 
-                          const getPlayerStats = (id: string) => {
-                            // Seeded pseudo-randomness based on ID string
-                            const seed = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                            const getVal = (offset: number) => 60 + ((seed * offset) % 40);
-                            
-                            return {
-                              strength: getVal(7),
-                              agility: getVal(13),
-                              intel: getVal(19),
-                              spirit: getVal(23),
-                              description: WITTY_DESCRIPTIONS[seed % WITTY_DESCRIPTIONS.length]
-                            };
-                          };
+                {!isPlayMode ? (
+                  <div className="hawaiian-card overflow-hidden border-stone-800/40 bg-stone-900/20 backdrop-blur-sm">
+                    <div className="overflow-x-auto custom-scrollbar">
+                      <table className="w-full text-left font-display">
+                        <thead>
+                          <tr className="bg-stone-950/60 text-stone-500 text-[10px] tracking-[0.3em] uppercase">
+                            <th className="px-8 py-5">Survivor</th>
+                            <th className="px-8 py-5">Tribe</th>
+                            <th className="px-8 py-5">Island Reputation</th>
+                            <th className="px-8 py-5">Power Vitals</th>
+                            <th className="px-8 py-5 text-right">Survival %</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-stone-800/40">
+                          {filteredPlayers.map((player, pIdx) => {
+                            // Gender Override for Riffy Campo
+                            let p = { ...player };
+                            if (p.name === "Riffy Campo") {
+                              p.gender = 'Female';
+                            }
 
-                          return players.map((player, pIdx) => {
-                            const tribe = tribes.find(t => t.playerIds.includes(player.id));
+                            const tribe = tribes.find(t => t.playerIds.includes(p.id));
                             if (!tribe) return null;
-                            const stats = getPlayerStats(player.id);
+                            const stats = getPlayerStats(p);
                             
                             return (
                               <motion.tr 
-                                key={player.id}
+                                key={p.id}
                                 initial={{ opacity: 0, x: -10 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ delay: pIdx * 0.02 }}
@@ -1914,14 +2020,152 @@ export default function App() {
                                 </td>
                               </motion.tr>
                             );
-                          });
-                        })()}
-                      </tbody>
-                    </table>
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
+                ) : (
+                      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        {(() => {
+                           const PAGE_SIZE = 4;
+                           const totalPages = Math.ceil(filteredPlayers.length / PAGE_SIZE);
+                           const pageIndex = currentPlayIndex % (totalPages || 1);
+                           const displayPlayers = filteredPlayers.slice(pageIndex * PAGE_SIZE, (pageIndex + 1) * PAGE_SIZE);
+                           
+                           return (
+                             <>
+                               {/* Progress Bar for the 5-second interval */}
+                               <div className="w-full h-1 bg-stone-900 rounded-full overflow-hidden">
+                                 <motion.div 
+                                   key={currentPlayIndex}
+                                   initial={{ width: "0%" }}
+                                   animate={{ width: "100%" }}
+                                   transition={{ duration: 6, ease: "linear" }}
+                                   className="h-full bg-torch-orange shadow-[0_0_10px_rgba(249,115,22,0.5)]"
+                                 />
+                               </div>
+
+                               <div className="flex items-center justify-between">
+                                 <div className="flex items-center gap-4">
+                                   <div className="px-4 py-1 bg-stone-800 border border-stone-700 rounded-full">
+                                     <span className="text-[10px] font-display text-stone-400 uppercase tracking-[0.2em]">Batch {pageIndex + 1} of {totalPages}</span>
+                                   </div>
+                                   <div className="flex gap-1">
+                                      {Array.from({ length: totalPages }).map((_, i) => (
+                                        <div 
+                                          key={i} 
+                                          className={cn(
+                                            "w-2 h-2 rounded-full transition-all duration-300",
+                                            i === pageIndex ? "bg-torch-orange w-4" : "bg-stone-800"
+                                          )} 
+                                        />
+                                      ))}
+                                   </div>
+                                 </div>
+                                 <p className="text-stone-500 font-display text-xs tracking-widest uppercase">Displays updating every 6 seconds</p>
+                               </div>
+
+                               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                {displayPlayers.map((player, pIdx) => {
+                                  let p = { ...player };
+                                  if (p.name === "Riffy Campo") p.gender = 'Female';
+                                  
+                                  const tribe = tribes.find(t => t.playerIds.includes(p.id));
+                                  if (!tribe) return null;
+                                  const stats = getPlayerStats(p);
+                                  
+                                  return (
+                                    <motion.div
+                                      key={`${p.id}-${currentPlayIndex}`}
+                                      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                                      exit={{ opacity: 0, y: -40, scale: 0.95 }}
+                                      transition={{ 
+                                        type: "spring",
+                                        damping: 20,
+                                        stiffness: 100,
+                                        delay: pIdx * 0.1 
+                                      }}
+                                      className="hawaiian-card p-8 flex flex-col gap-6 group/card border-stone-800 bg-stone-900/60 backdrop-blur-xl relative overflow-hidden min-h-[500px] shadow-2xl"
+                                    >
+                                      {/* Decorative Tribe Background */}
+                                      <div className="absolute -top-10 -right-10 w-40 h-40 opacity-10 pointer-events-none group-hover/card:scale-125 transition-transform duration-1000">
+                                        <div className="w-full h-full rounded-full blur-[40px]" style={{ backgroundColor: tribe.color }} />
+                                      </div>
+
+                                      <div className="flex items-center justify-start relative z-10">
+                                        <div className="px-4 py-1.5 rounded-full text-xs uppercase tracking-[0.2em] font-display text-white shadow-xl border border-white/10" style={{ backgroundColor: tribe.color }}>
+                                          {tribe.name}
+                                        </div>
+                                      </div>
+
+                                      <div className="space-y-4 relative z-10 border-b border-stone-800/80 pb-6 flex-grow-0">
+                                        <h4 className="text-4xl font-display text-stone-100 leading-tight group-hover/card:text-torch-orange transition-colors">{p.name}</h4>
+                                        <p className="font-hand text-2xl text-sand leading-relaxed italic animate-in fade-in slide-in-from-left-2 duration-1000 delay-300">
+                                          "{stats.description}"
+                                        </p>
+                                      </div>
+
+                                      <div className="space-y-6 py-4 relative z-10 flex-grow">
+                                        <div className="space-y-4">
+                                           <div className="grid grid-cols-1 gap-3">
+                                            {[
+                                              { label: 'Strength', val: stats.strength, color: 'bg-torch-red', icon: <Flame size={10} /> },
+                                              { label: 'Agility', val: stats.agility, color: 'bg-lagoon', icon: <Waves size={10} /> },
+                                              { label: 'Intelligence', val: stats.intel, color: 'bg-sky-500', icon: <Compass size={10} /> }
+                                            ].map((vit) => (
+                                              <div key={vit.label} className="bg-stone-950/80 p-3 rounded-2xl border border-stone-800/80 group-hover/card:border-stone-700 transition-colors">
+                                                <div className="flex items-center justify-between mb-2">
+                                                  <div className="flex items-center gap-2">
+                                                    <span className={cn("p-1 rounded-md text-stone-400", vit.color.replace('bg-', 'text-'))}>{vit.icon}</span>
+                                                    <span className="text-[10px] text-stone-500 font-display uppercase tracking-widest">{vit.label}</span>
+                                                  </div>
+                                                  <span className="text-sm text-stone-100 font-mono font-bold">{vit.val}</span>
+                                                </div>
+                                                <div className="h-1.5 w-full bg-stone-900 rounded-full overflow-hidden">
+                                                  <motion.div 
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${vit.val}%` }}
+                                                    transition={{ duration: 1.5, ease: "easeOut", delay: pIdx * 0.1 + 0.5 }}
+                                                    className={cn("h-full rounded-full", vit.color)} 
+                                                  />
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div className="mt-auto pt-6 flex items-center justify-between border-t border-stone-800/80">
+                                        <div className="flex flex-col">
+                                          <span className="text-[9px] text-stone-600 uppercase tracking-[0.2em]">Survivor Index</span>
+                                          <span className="text-xl font-mono font-bold text-torch-orange">0{Math.round((stats.strength + stats.agility + stats.intel) / 3)}</span>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                          <span className="text-[9px] text-stone-600 uppercase tracking-[0.2em]">Survival %</span>
+                                          <div className="flex items-center gap-2">
+                                            <div className="w-16 h-2 bg-stone-900 rounded-full overflow-hidden">
+                                               <div className="h-full bg-hibiscus" style={{ width: `${stats.spirit}%` }} />
+                                            </div>
+                                            <span className="text-lg font-mono text-stone-100">{stats.spirit}</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </motion.div>
+                                  );
+                                })}
+                              </div>
+                             </>
+                           );
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
+          </motion.div>
           )}
         </AnimatePresence>
       </main>
