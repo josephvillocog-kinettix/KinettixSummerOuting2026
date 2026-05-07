@@ -89,19 +89,19 @@ type RevealEvent =
 
 // --- Constants ---
 const TRIBAL_COLORS = [
-  { name: 'Voyagers', value: '#3ebeb1', icon: 'Asset 1.png' },
-  { name: 'StormBreakers', value: '#ca3729', icon: 'Asset 3.png' },
-  { name: 'Keepers', value: '#d2672e', icon: 'Asset 4.png' },
-  { name: 'Guardians', value: '#d3a12a', icon: 'Asset 5.png' },
-  { name: 'Raiders', value: '#6a4d94', icon: 'Asset 6.png' },
-  { name: 'PathFinders', value: '#6c7e35', icon: 'Asset 7.png' },
+  { name: 'Voyagers', value: '#3ebeb1', icon: 'Asset_1.png' },
+  { name: 'StormBreakers', value: '#ca3729', icon: 'Asset_3.png' },
+  { name: 'Keepers', value: '#d2672e', icon: 'Asset_4.png' },
+  { name: 'Guardians', value: '#d3a12a', icon: 'Asset_5.png' },
+  { name: 'Raiders', value: '#6a4d94', icon: 'Asset_6.png' },
+  { name: 'PathFinders', value: '#6c7e35', icon: 'Asset_7.png' },
 ];
 
 // --- Assets ---
 const TIKI_ASSETS = [
-  "Asset 1.png", "Asset 3.png", "Asset 4.png", "Asset 5.png", 
-  "Asset 6.png", "Asset 7.png", "Asset 8.png", "Asset 9.png", 
-  "Asset 10.png", "Asset 11.png", "Asset 12.png", "Asset 13.png"
+  "Asset_1.png", "Asset_3.png", "Asset_4.png", "Asset_5.png", 
+  "Asset_6.png", "Asset_7.png", "Asset_8.png", "Asset_9.png", 
+  "Asset_10.png", "Asset_11.png", "Asset_12.png", "Asset_13.png"
 ];
 
 const GENDERS: Gender[] = ['Male', 'Female', 'Other'];
