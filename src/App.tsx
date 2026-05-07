@@ -2046,27 +2046,28 @@ export default function App() {
                               <div className="flex flex-col flex-grow">
                                 <div className="flex items-center gap-3">
                                   <span className="font-display text-2xl text-stone-900 tracking-tight leading-none">{player?.name}</span>
-                                  <div className="flex gap-1 opacity-60">
-                                    {player?.gender === 'Male' ? (
-                                      <Mars size={18} className="text-ocean-blue" />
-                                    ) : player?.gender === 'Female' ? (
-                                      <Venus size={18} className="text-hibiscus" />
-                                    ) : (
-                                      <MoreHorizontal size={18} className="text-stone-500" />
-                                    )}
+                                </div>
+                                <div className="flex flex-col gap-1 mt-2">
+                                  <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-1 opacity-70">
+                                      {player?.gender === 'Male' ? (
+                                        <Mars size={14} className="text-ocean-blue" />
+                                      ) : player?.gender === 'Female' ? (
+                                        <Venus size={14} className="text-hibiscus" />
+                                      ) : (
+                                        <MoreHorizontal size={14} className="text-stone-500" />
+                                      )}
+                                      <span className="font-display text-[10px] text-stone-600 uppercase tracking-widest">{player?.gender}</span>
+                                    </div>
+                                    <div className="w-1 h-1 rounded-full bg-stone-300" />
+                                    <div className="flex items-center gap-1.5 opacity-70">
+                                      <Shield size={12} className="text-stone-400" />
+                                      <span className="font-display text-[10px] text-stone-600 uppercase tracking-widest">
+                                        Sup: {player?.supervisorName || player?.category || 'None'}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
-                                <span className="font-display text-xs text-stone-600 uppercase tracking-widest leading-none mt-2 flex flex-col gap-1">
-                                  <div className="flex items-center gap-1.5">
-                                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tribe.color }} />
-                                    {player?.supervisorName ? `${player.supervisorName}` : player?.category}
-                                  </div>
-                                  {player?.reputation && (
-                                    <span className="font-hand text-stone-500 normal-case italic text-sm mt-1">
-                                      "{player.reputation}"
-                                    </span>
-                                  )}
-                                </span>
                               </div>
                             </li>
                           );
