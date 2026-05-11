@@ -40,6 +40,7 @@ import {
   Download,
   Cloud,
   CloudUpload,
+  CloudDownload,
   Save,
   Loader2,
   Check,
@@ -368,11 +369,73 @@ export default function App() {
       setLoginError(false);
     }
   }, [currentView]);
+  useEffect(() => {
+    if (currentView === 'member-roster' && players.length === 0) {
+      loadFromGoogleSheets();
+    }
+  }, [currentView]);
   const [revealEvents, setRevealEvents] = useState<RevealEvent[]>([]);
   const [revealedCount, setRevealedCount] = useState(0);
   const [inductionOverlayDismissed, setInductionOverlayDismissed] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isLoadingRegistry, setIsLoadingRegistry] = useState(false);
+
+  const loadFromGoogleSheets = async () => {
+    setIsLoadingRegistry(true);
+    try {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbyaLTqpOOj2bNO0coHaLjpHdOdtC6vu1JmSH-Bujiuc3dzdPEJN1k50zoQlaTtqAij5/exec");
+      const data = await response.json();
+      
+      if (Array.isArray(data)) {
+        const newPlayers: Player[] = [];
+        const usedReps = new Set<string>();
+        
+        const updatedTribes = TRIBAL_COLORS.map((tc, i) => ({
+          id: `tribe-${i + 1}`,
+          name: tc.name,
+          color: tc.value,
+          icon: tc.icon,
+          playerIds: [] as string[]
+        }));
+
+        data.forEach(item => {
+          const id = crypto.randomUUID();
+          // Derive some stats/info if possible, otherwise default
+          const reputation = getWittyReputation(item.name || item.name, usedReps);
+          usedReps.add(reputation);
+
+          const player: Player = {
+            id,
+            name: item.name || 'Unknown',
+            gender: 'Other', // We don't have gender in the sheet specifically requested but derived from name if known
+            category: 'Standard',
+            supervisorName: item.supervisor || 'N/A',
+            reputation
+          };
+          
+          if (player.name.toUpperCase() === "RIFFY CAMPO") player.gender = 'Female';
+
+          newPlayers.push(player);
+          
+          // Assign to tribe
+          const tribe = updatedTribes.find(t => t.name.toLowerCase() === (item.tribe || '').toLowerCase());
+          if (tribe) {
+            tribe.playerIds.push(id);
+          }
+        });
+        
+        setPlayers(newPlayers);
+        setTribes(updatedTribes);
+        console.log('Successfully loaded registry from Google Sheets');
+      }
+    } catch (error) {
+      console.error('Error loading from Google Sheets:', error);
+      // alert('Failed to sync from registry. Make sure the web app is published and accessible.');
+    } finally {
+      setIsLoadingRegistry(false);
+    }
+  };
 
   const saveToGoogleSheets = async () => {
     setIsSaving(true);
@@ -798,12 +861,23 @@ export default function App() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-10"
             >
-              <div className="flex flex-col gap-2">
-                <h2 className="font-display text-5xl text-stone-100 tracking-widest">MEMBER ROSTER</h2>
-                <div className="flex items-center gap-3 text-stone-500">
-                  <UserCheck size={20} />
-                  <span className="uppercase tracking-[0.3em] text-xs">Official Tribe Assignment</span>
+              <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+                <div className="flex flex-col gap-2">
+                  <h2 className="font-display text-5xl text-stone-100 tracking-widest">MEMBER ROSTER</h2>
+                  <div className="flex items-center gap-3 text-stone-500">
+                    <UserCheck size={20} />
+                    <span className="uppercase tracking-[0.3em] text-xs">Official Tribe Assignment</span>
+                  </div>
                 </div>
+
+                <button
+                  onClick={loadFromGoogleSheets}
+                  disabled={isLoadingRegistry}
+                  className="flex items-center gap-3 px-6 py-3 bg-stone-800 hover:bg-stone-700 text-stone-100 rounded-xl border border-stone-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                >
+                  {isLoadingRegistry ? <Loader2 size={18} className="animate-spin" /> : <CloudDownload size={18} className="text-lagoon" />}
+                  <span className="font-display tracking-[0.2em] uppercase text-sm">{isLoadingRegistry ? 'Syncing...' : 'Load from Registry'}</span>
+                </button>
               </div>
 
               <div className="space-y-6">
