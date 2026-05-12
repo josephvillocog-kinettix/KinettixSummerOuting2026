@@ -22,7 +22,6 @@ import {
   Anchor,
   Compass,
   Map as MapIcon,
-  Skull,
   Scroll,
   ChevronRight,
   UserCheck,
@@ -787,12 +786,13 @@ export default function App() {
 
 // --- Components ---
 
-  const KinettixLogo = ({ className, size = 40 }: { className?: string, size?: number }) => (
+  const KinettixLogo = ({ className, size = 40, style }: { className?: string, size?: number, style?: any }) => (
     <svg 
       width={size} 
       height={size} 
       viewBox="0 0 400 400" 
       className={className}
+      style={style}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path d="M100 100 L200 200 L100 300 L50 250 L125 200 L50 150 Z" fill="#0ea5e9" />
@@ -817,7 +817,7 @@ export default function App() {
       case 'Waves': return <Waves size={size} className={className} style={style} />;
       case 'Palmtree': return <Palmtree size={size} className={className} style={style} />;
       case 'Sun': return <Sun size={size} className={className} style={style} />;
-      case 'Skull': return <Skull size={size} className={className} style={style} />;
+      case 'Skull': return <KinettixLogo size={size} className={className} style={style} />;
       case 'Anchor': return <Anchor size={size} className={className} style={style} />;
       default: return <Bird size={size} className={className} style={style} />;
     }
@@ -1438,7 +1438,7 @@ export default function App() {
                   >
                     <div className="absolute -inset-2 bg-lagoon blur-xl opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
                     <div className="relative px-16 py-8 bg-stone-950 border-4 border-stone-800 rounded-full transform transition hover:scale-105 active:scale-95 flex items-center gap-6 shadow-2xl hover:border-lagoon">
-                      <Skull className="text-lagoon group-hover:animate-pulse" size={36} />
+                      <KinettixLogo className="group-hover:animate-pulse" size={36} />
                       <span className="font-display text-4xl text-stone-100 tracking-[0.3em]">START RITUAL</span>
                     </div>
                   </button>
@@ -1456,55 +1456,11 @@ export default function App() {
               animate={{ opacity: 1 }}
               className="min-h-[70vh] flex flex-col items-center relative"
             >
-              {/* Floating Dancing Side Masks during fill process */}
-              {revealEvents.length > 0 && revealedCount < revealEvents.length && (
-                <>
-                  <div className="fixed left-2 top-1/2 -translate-y-1/2 z-[100] pointer-events-none hidden xl:flex flex-col gap-12 opacity-60">
-                     <motion.div
-                       animate={{ 
-                         y: [0, -20, 0],
-                         rotate: [-5, 5, -5],
-                       }}
-                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                     >
-                        <DetailedTikiMask variant={1} color="#f59e0b" scale={0.8} delay={0} />
-                     </motion.div>
-                     <motion.div
-                       animate={{ 
-                         y: [0, 20, 0],
-                         rotate: [5, -5, 5],
-                       }}
-                       transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                     >
-                        <DetailedTikiMask variant={3} color="#ef4444" scale={0.6} delay={0.2} />
-                     </motion.div>
-                  </div>
-                  <div className="fixed right-2 top-1/2 -translate-y-1/2 z-[100] pointer-events-none hidden xl:flex flex-col gap-12 opacity-60">
-                     <motion.div
-                       animate={{ 
-                         y: [0, 20, 0],
-                         rotate: [10, -10, 10],
-                       }}
-                       transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                     >
-                        <DetailedTikiMask variant={7} color="#3b82f6" scale={0.8} delay={0.1} />
-                     </motion.div>
-                     <motion.div
-                       animate={{ 
-                         y: [0, -20, 0],
-                         rotate: [-10, 10, -10],
-                       }}
-                       transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                     >
-                        <DetailedTikiMask variant={12} color="#10b981" scale={0.6} delay={0.4} />
-                     </motion.div>
-                  </div>
-                </>
-              )}
+              {/* Floating Dancing Side Masks during fill process removed per user request */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
                 <Waves className="absolute top-10 left-10 w-64 h-64 text-ocean-blue rotate-12" />
                 <Waves className="absolute bottom-10 right-10 w-64 h-64 text-lagoon -rotate-12" />
-                <Skull className="absolute top-1/2 left-1/4 w-32 h-32 text-hibiscus animate-sway" />
+                <KinettixLogo className="absolute top-1/2 left-1/4 w-32 h-32 animate-sway" />
               </div>
 
               <div className="flex flex-col items-center text-center gap-2 mb-10 relative z-10">
@@ -1550,15 +1506,7 @@ export default function App() {
                         <div className="absolute inset-0">
                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#451a03_0%,_transparent_70%)] opacity-40" />
                            
-                           {/* Flickering Torches (Sides) */}
-                           <div className="absolute left-10 top-1/2 -translate-y-1/2 flex flex-col gap-40">
-                              <TikiGuard color="#f97316" />
-                              <TikiGuard color="#f97316" />
-                           </div>
-                           <div className="absolute right-10 top-1/2 -translate-y-1/2 flex flex-col gap-40">
-                              <TikiGuard color="#f97316" />
-                              <TikiGuard color="#f97316" />
-                           </div>
+                           {/* Flickering Torches (Sides) removed per user request */}
 
                            {/* Smoke/Haze */}
                            <motion.div 
@@ -1582,7 +1530,7 @@ export default function App() {
                              transition={{ duration: 4, repeat: Infinity }}
                              className="mb-8"
                            >
-                             <Skull size={100} className="text-torch-orange mx-auto drop-shadow-[0_0_20px_rgba(249,115,22,0.6)]" />
+                             <KinettixLogo size={100} className="mx-auto drop-shadow-[0_0_20px_rgba(14,165,233,0.6)]" />
                            </motion.div>
                            
                            <h1 className="font-display text-6xl md:text-8xl lg:text-9xl text-stone-100 tracking-[0.4em] uppercase mb-4 drop-shadow-[0_10px_30px_rgba(0,0,0,1)]">
@@ -1597,31 +1545,43 @@ export default function App() {
                              BEGINS
                            </motion.p>
 
-                           {/* Row of all 6 Tribes */}
-                           <div className="flex flex-wrap justify-center gap-8 md:gap-12 mt-12 max-w-6xl mx-auto">
-                             {tribes.map((t, idx) => (
-                               <motion.div
-                                 key={t.id}
-                                 initial={{ y: 50, opacity: 0, scale: 0.8 }}
-                                 animate={{ y: 0, opacity: 1, scale: 1 }}
-                                 transition={{ delay: 1 + (idx * 0.1), duration: 0.8 }}
-                                 className="flex flex-col items-center gap-4 group"
-                               >
-                                 <div className="relative p-7 bg-stone-900/60 border-2 border-stone-800 rounded-[2.2rem] shadow-2xl transition-transform hover:scale-110">
-                                   <div className="absolute inset-0 blur-2xl opacity-10 rounded-full" style={{ backgroundColor: t.color }} />
-                                   <TribeIconComponent icon={t.icon} size={84} style={{ color: t.color }} className="relative z-10" />
-                                   
-                                   {/* Decorative Ring */}
-                                   <div className="absolute -inset-2.5 border-2 border-stone-800/50 rounded-[2.8rem] pointer-events-none" />
-                                 </div>
-                                 <div className="flex flex-col items-center">
-                                   <span className="font-display text-2xl text-stone-100 tracking-widest uppercase" style={{ textShadow: `0 0 10px ${t.color}44` }}>
-                                     {t.name}
-                                   </span>
-                                   <div className="w-16 h-1.5 mt-2 rounded-full" style={{ backgroundColor: t.color }} />
-                                 </div>
-                               </motion.div>
-                             ))}
+                           {/* Row of all 6 Tribes - Single Line Adaptive Design */}
+                           <div className="w-full overflow-x-auto pb-12 custom-scrollbar snap-x">
+                             <div className="flex flex-nowrap min-w-max lg:min-w-0 lg:justify-center gap-6 md:gap-10 lg:gap-12 px-8">
+                               {tribes.map((t, idx) => (
+                                 <motion.div
+                                   key={t.id}
+                                   initial={{ y: 50, opacity: 0, scale: 0.8 }}
+                                   animate={{ y: 0, opacity: 1, scale: 1 }}
+                                   transition={{ delay: 1 + (idx * 0.1), duration: 0.8 }}
+                                   className="flex flex-col items-center gap-4 group flex-shrink-0 snap-center"
+                                 >
+                                   <div className="relative p-5 md:p-7 bg-stone-900/60 border-2 border-stone-800 rounded-[1.8rem] md:rounded-[2.2rem] shadow-2xl transition-transform hover:scale-110">
+                                     <div className="absolute inset-0 blur-2xl opacity-10 rounded-full" style={{ backgroundColor: t.color }} />
+                                     
+                                     {/* Adaptive Size handling via hidden/block */}
+                                     <div className="md:hidden">
+                                       <TribeIconComponent icon={t.icon} size={80} style={{ color: t.color }} className="relative z-10" />
+                                     </div>
+                                     <div className="hidden md:block lg:hidden">
+                                       <TribeIconComponent icon={t.icon} size={100} style={{ color: t.color }} className="relative z-10" />
+                                     </div>
+                                     <div className="hidden lg:block">
+                                       <TribeIconComponent icon={t.icon} size={120} style={{ color: t.color }} className="relative z-10" />
+                                     </div>
+                                     
+                                     {/* Decorative Ring */}
+                                     <div className="absolute -inset-2 md:-inset-2.5 border-2 border-stone-800/50 rounded-[2.2rem] md:rounded-[2.8rem] pointer-events-none" />
+                                   </div>
+                                   <div className="flex flex-col items-center">
+                                     <span className="font-display text-2xl md:text-3xl lg:text-4xl text-stone-100 tracking-widest uppercase" style={{ textShadow: `0 0 150px ${t.color}44` }}>
+                                       {t.name}
+                                     </span>
+                                     <div className="w-12 md:w-14 lg:w-16 h-1 md:h-1.5 mt-2 rounded-full" style={{ backgroundColor: t.color }} />
+                                   </div>
+                                 </motion.div>
+                               ))}
+                             </div>
                            </div>
 
                            <motion.div
@@ -1665,26 +1625,7 @@ export default function App() {
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-stone-950/80 backdrop-blur-md"
                       >
-                        {/* Celebration Dancing Group - All Assigned Tribes */}
-                        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-12 md:px-24 pb-12 opacity-30 pointer-events-none">
-                          {tribes.map((t, idx) => (
-                            <motion.div
-                              key={`final-${t.id}`}
-                              animate={{ 
-                                y: [0, -40, 0],
-                                rotate: [-10, 10, -10]
-                              }}
-                              transition={{ 
-                                duration: 3 + Math.random() * 2, 
-                                repeat: Infinity, 
-                                ease: "easeInOut",
-                                delay: idx * 0.3
-                              }}
-                            >
-                              <DetailedTikiMask assetName={t.icon} color={t.color} scale={0.7} />
-                            </motion.div>
-                          ))}
-                        </div>
+                        {/* Celebration Dancing Group removed per user request */}
 
                         <motion.div
                           initial={{ scale: 0.5, opacity: 0, y: 50 }}
@@ -1938,8 +1879,17 @@ export default function App() {
                                className="absolute inset-0 blur-[100px] opacity-60 rounded-full" 
                                style={{ backgroundColor: tribe.color }} 
                              />
-                             <div className="relative p-12 bg-stone-900 border-8 border-stone-800 rounded-full shadow-[0_0_100px_rgba(0,0,0,0.8)]">
-                                <TribeIconComponent icon={tribe.icon} size={200} style={{ color: tribe.color }} className="drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]" />
+                             <div className="relative p-8 md:p-14 lg:p-20 bg-stone-900 border-8 border-stone-800 rounded-full shadow-[0_0_150px_rgba(0,0,0,0.9)]">
+                                {/* Responsive Icon Sizes */}
+                                <div className="md:hidden">
+                                  <TribeIconComponent icon={tribe.icon} size={150} style={{ color: tribe.color }} className="drop-shadow-[0_0_30px_rgba(0,0,0,0.9)]" />
+                                </div>
+                                <div className="hidden md:block lg:hidden">
+                                  <TribeIconComponent icon={tribe.icon} size={240} style={{ color: tribe.color }} className="drop-shadow-[0_0_45px_rgba(0,0,0,0.9)]" />
+                                </div>
+                                <div className="hidden lg:block">
+                                  <TribeIconComponent icon={tribe.icon} size={320} style={{ color: tribe.color }} className="drop-shadow-[0_0_60px_rgba(0,0,0,0.9)]" />
+                                </div>
                              </div>
                              
                              {/* Animated rings */}
@@ -1973,56 +1923,42 @@ export default function App() {
                            </motion.div>
                         </motion.div>
                         
-                        <div className="relative z-10 text-center">
+                        <div className="relative z-10 text-center w-full px-4 overflow-hidden">
                           <motion.div
                             initial={{ y: 50, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.4, duration: 1 }}
                           >
-                            <div className="flex flex-col items-center">
-                               {tribe.name === "Stormbreakers" ? (
-                                  <div className="flex flex-col items-center -space-y-4 md:-space-y-8">
-                                    <h2 className="font-display text-7xl md:text-[8rem] text-stone-100 tracking-[0.3em] uppercase drop-shadow-2xl" style={{ textShadow: `0 0 40px ${tribe.color}66` }}>STORM</h2>
-                                    <h2 className="font-display text-7xl md:text-[8rem] text-stone-100 tracking-[0.3em] uppercase drop-shadow-2xl" style={{ textShadow: `0 0 40px ${tribe.color}66` }}>BREAKERS</h2>
-                                  </div>
-                               ) : tribe.name === "PathFinders" ? (
-                                  <div className="flex flex-col items-center -space-y-4 md:-space-y-8">
-                                     <h2 className="font-display text-7xl md:text-[8rem] text-stone-100 tracking-[0.3em] uppercase drop-shadow-2xl" style={{ textShadow: `0 0 40px ${tribe.color}66` }}>PATH</h2>
-                                     <h2 className="font-display text-7xl md:text-[8rem] text-stone-100 tracking-[0.3em] uppercase drop-shadow-2xl" style={{ textShadow: `0 0 40px ${tribe.color}66` }}>FINDERS</h2>
-                                  </div>
-                               ) : (
-                                 <h2 
-                                   className="font-display text-7xl md:text-[10rem] text-stone-100 tracking-[0.3em] uppercase drop-shadow-[0_10px_30px_rgba(0,0,0,1)] inline-block"
-                                   style={{ 
-                                     textShadow: `0 0 40px ${tribe.color}66`
-                                   }}
-                                 >
-                                   {tribe.name}
-                                 </h2>
-                               )}
-                            </div>
+                             <h2 
+                               className="font-display text-[8vw] sm:text-[10vw] md:text-[9rem] lg:text-[14rem] text-stone-100 tracking-[0.3em] uppercase drop-shadow-[0_25px_70px_rgba(0,0,0,1)] whitespace-nowrap inline-block leading-tight"
+                               style={{ 
+                                 textShadow: `0 0 70px ${tribe.color}AA`
+                               }}
+                             >
+                                {tribe.name}
+                             </h2>
                           </motion.div>
 
                           <motion.div 
                             initial={{ scaleX: 0, opacity: 0 }}
                             animate={{ scaleX: 1, opacity: 1 }}
                             transition={{ delay: 1, duration: 1.5 }}
-                            className="flex items-center justify-center gap-10 mt-8"
+                            className="flex items-center justify-center gap-4 md:gap-10 mt-8"
                           >
-                             <div className="h-1 lg:w-48 bg-gradient-to-r from-transparent to-stone-600" />
-                             <div className="flex flex-col gap-2">
-                               <span className="font-sans text-4xl text-sand tracking-[0.2em] uppercase font-medium drop-shadow-md">The spirits have spoken...</span>
+                             <div className="h-[1px] md:h-1 flex-1 lg:w-48 bg-gradient-to-r from-transparent to-stone-600" />
+                             <div className="flex flex-col gap-2 min-w-fit">
+                               <span className="font-sans text-lg sm:text-2xl md:text-3xl lg:text-5xl text-sand tracking-[0.2em] uppercase font-medium drop-shadow-md">The spirits have spoken...</span>
                                <motion.div 
                                  animate={{ opacity: [0.4, 1, 0.4] }}
                                  transition={{ duration: 2, repeat: Infinity }}
                                  className="flex justify-center gap-4 text-stone-500"
-                               >
-                                 <Waves size={24} />
-                                 <TribeIconComponent icon={tribe.icon} size={24} />
-                                 <Shield size={24} />
-                               </motion.div>
+                                >
+                                  <Waves size={24} className="md:size-[32px]" />
+                                  <TribeIconComponent icon={tribe.icon} size={30} className="md:size-[40px]" />
+                                  <Shield size={24} className="md:size-[32px]" />
+                                </motion.div>
                              </div>
-                             <div className="h-1 lg:w-48 bg-gradient-to-l from-transparent to-stone-600" />
+                             <div className="h-[1px] md:h-1 flex-1 lg:w-48 bg-gradient-to-l from-transparent to-stone-600" />
                           </motion.div>
                         </div>
 
@@ -2062,16 +1998,22 @@ export default function App() {
                          
                          {/* Header */}
                          <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12 relative z-10 border-b border-stone-800 pb-8">
-                            <div className="flex items-center gap-8">
-                               <div className="p-6 bg-stone-950 border-4 border-stone-800 rounded-3xl shadow-xl relative group">
-                                  <TribeIconComponent icon={selectedTribe.icon} size={80} style={{ color: selectedTribe.color }} />
+                            <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 max-w-full">
+                               <div className="p-6 md:p-10 bg-stone-950 border-4 border-stone-800 rounded-3xl shadow-xl relative group shrink-0">
+                                  {/* Responsive Icon in Detail View */}
+                                  <div className="md:hidden">
+                                     <TribeIconComponent icon={selectedTribe.icon} size={80} style={{ color: selectedTribe.color }} />
+                                  </div>
+                                  <div className="hidden md:block">
+                                     <TribeIconComponent icon={selectedTribe.icon} size={160} style={{ color: selectedTribe.color }} />
+                                  </div>
                                   <div className="absolute inset-0 blur-2xl opacity-20 bg-current rounded-full" style={{ color: selectedTribe.color }} />
                                </div>
-                               <div className="text-left">
-                                  <h2 className="font-display text-7xl text-stone-100 tracking-widest uppercase mb-2" style={{ textShadow: `0 0 20px ${selectedTribe.color}44` }}>
+                               <div className="text-center sm:text-left overflow-hidden w-full">
+                                  <h2 className="font-display text-4xl sm:text-6xl lg:text-9xl text-stone-100 tracking-widest uppercase mb-2 break-words leading-tight" style={{ textShadow: `0 0 50px ${selectedTribe.color}66` }}>
                                      {selectedTribe.name}
                                   </h2>
-                                  <div className="flex items-center gap-4 text-stone-500 font-display tracking-[0.3em] text-sm uppercase">
+                                  <div className="flex items-center justify-center sm:justify-start gap-4 text-stone-500 font-display tracking-[0.3em] text-[10px] sm:text-sm uppercase">
                                      <Waves size={16} />
                                      <span>Established Kinettix Tribe</span>
                                      <Waves size={16} />
@@ -2166,11 +2108,11 @@ export default function App() {
                                  className="relative z-20"
                                >
                                   <div className="absolute -inset-20 blur-[60px] opacity-20 rounded-full" style={{ backgroundColor: selectedTribe.color }} />
-                                  <DetailedTikiMask assetName={selectedTribe.icon} color={selectedTribe.color} scale={1.5} />
+                                  <DetailedTikiMask assetName={selectedTribe.icon} color={selectedTribe.color} scale={2.2} />
                                </motion.div>
 
                                <div className="mt-12 text-center relative z-20">
-                                  <p className="font-sans text-2xl text-sand/80 uppercase tracking-widest">The choice is made.</p>
+                                  <p className="font-sans text-4xl text-sand uppercase tracking-widest font-medium drop-shadow-lg">The choice is made.</p>
                                   <div className="mt-4 flex justify-center gap-6 opacity-30">
                                      <Flower className="animate-spin-slow text-hibiscus" />
                                      <Waves className="animate-sway text-ocean-blue" />
@@ -2321,15 +2263,15 @@ export default function App() {
                       )}
                       <div className="absolute top-0 left-0 w-full h-2 opacity-20 pointer-events-none" style={{ background: `repeating-linear-gradient(90deg, ${tribe.color}, ${tribe.color} 5px, transparent 5px, transparent 10px)` }} />
                       
-                      <div className="p-6 border-b border-stone-800 bg-stone-900/60 relative z-10 flex items-center justify-between">
+                      <div className="p-8 border-b border-stone-800 bg-stone-900/60 relative z-10 flex items-center justify-between">
                          <div>
-                            <h3 className="font-display text-3xl text-stone-100 uppercase tracking-widest flex items-center gap-3">
-                               <TribeIconComponent icon={tribe.icon} size={20} style={{ color: tribe.color }} />
+                            <h3 className="font-display text-4xl text-stone-100 uppercase tracking-widest flex items-center gap-6">
+                               <TribeIconComponent icon={tribe.icon} size={36} style={{ color: tribe.color }} />
                                {tribe.name}
                             </h3>
                          </div>
-                         <div className="p-3 rounded-full bg-stone-950 border border-stone-800">
-                            <TribeIconComponent icon={tribe.icon} size={24} style={{ color: tribe.color }} />
+                         <div className="p-4 rounded-full bg-stone-950 border border-stone-800">
+                            <TribeIconComponent icon={tribe.icon} size={36} style={{ color: tribe.color }} />
                          </div>
                       </div>
 
@@ -2614,7 +2556,6 @@ export default function App() {
                                 <th className="px-10 py-5 font-display text-xs text-stone-500 uppercase tracking-[0.3em] border-b border-stone-800">Warrior Name</th>
                                 <th className="px-10 py-5 font-display text-xs text-stone-500 uppercase tracking-[0.3em] border-b border-stone-800">Identity</th>
                                 <th className="px-10 py-5 font-display text-xs text-stone-500 uppercase tracking-[0.3em] border-b border-stone-800">Command / Supervision</th>
-                                <th className="px-10 py-5 font-display text-xs text-stone-500 uppercase tracking-[0.3em] border-b border-stone-800">Reputation</th>
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-stone-800/50">
@@ -2648,11 +2589,7 @@ export default function App() {
                                         </span>
                                       </div>
                                     </td>
-                                    <td className="px-10 py-6 max-w-sm">
-                                      <p className="font-sans text-xs text-sand/60 italic leading-relaxed line-clamp-2 italic">
-                                        "{player?.reputation}"
-                                      </p>
-                                    </td>
+
                                   </tr>
                                 );
                               })}
