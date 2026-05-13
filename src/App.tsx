@@ -48,7 +48,8 @@ import {
   LayoutGrid,
   Camera,
   Table as TableIcon,
-  Eye
+  Eye,
+  RefreshCw
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -83,6 +84,10 @@ interface Player {
   category: Category;
   supervisorName?: string;
   reputation?: string;
+  strength?: number;
+  agility?: number;
+  intel?: number;
+  spirit?: number;
 }
 
 interface Tribe {
@@ -267,10 +272,10 @@ const getPlayerStats = (player: Player) => {
   const getVal = (offset: number) => 60 + ((seed * offset) % 40);
   
   return {
-    strength: getVal(7),
-    agility: getVal(13),
-    intel: getVal(19),
-    spirit: getVal(23),
+    strength: player.strength ?? getVal(7),
+    agility: player.agility ?? getVal(13),
+    intel: player.intel ?? getVal(19),
+    spirit: player.spirit ?? getVal(23),
     description: player.reputation || "The silent strategist of the island."
   };
 };
@@ -437,7 +442,10 @@ export default function App() {
     if (currentView === 'member-roster' && rosterPlayers.length === 0) {
       loadFromGoogleSheets(true);
     }
-  }, [currentView]);
+    if (currentView === 'outplay' && players.length === 0) {
+      loadFromGoogleSheets(false);
+    }
+  }, [currentView, players.length, rosterPlayers.length]);
   const [revealEvents, setRevealEvents] = useState<RevealEvent[]>([]);
   const [revealedCount, setRevealedCount] = useState(0);
   const [inductionOverlayDismissed, setInductionOverlayDismissed] = useState(false);
@@ -486,10 +494,14 @@ export default function App() {
           const player: Player = {
             id,
             name: item.name || 'Unknown',
-            gender: 'Other', 
-            category: 'Standard',
+            gender: (item.gender as Gender) || 'Other', 
+            category: (item.category as Category) || 'Standard',
             supervisorName: item.supervisor || 'N/A',
-            reputation
+            reputation,
+            strength: item.strength ? Number(item.strength) : undefined,
+            agility: item.agility ? Number(item.agility) : undefined,
+            intel: item.intel ? Number(item.intel) : undefined,
+            spirit: item.spirit ? Number(item.spirit) : undefined,
           };
           
           if (player.name.toUpperCase() === "RIFFY CAMPO") player.gender = 'Female';
@@ -876,6 +888,13 @@ export default function App() {
       
       <div className="flex items-center gap-2 md:gap-4">
         <NavButton active={currentView === 'member-roster'} onClick={() => setCurrentView('member-roster')} icon={<UserCheck size={18} />} label="Member Roster" />
+        <NavButton 
+          active={currentView === 'outplay'} 
+          onClick={() => setCurrentView('outplay')} 
+          disabled={tribes.length === 0} 
+          icon={<BarChart3 size={18} />} 
+          label="Metrics" 
+        />
         
         {!isAuthenticated && (
           <NavButton 
@@ -905,13 +924,6 @@ export default function App() {
               disabled={tribes.length === 0} 
               icon={<Users size={18} />} 
               label="Tribes" 
-            />
-            <NavButton 
-              active={currentView === 'outplay'} 
-              onClick={() => setCurrentView('outplay')} 
-              disabled={tribes.length === 0} 
-              icon={<BarChart3 size={18} />} 
-              label="Metrics" 
             />
             <button
               onClick={() => setIsAuthenticated(false)}
@@ -2604,7 +2616,7 @@ export default function App() {
             </motion.div>
           )}
 
-          {isAuthenticated && currentView === 'outplay' && (
+          {currentView === 'outplay' && (
             <motion.div 
               key="outplay"
               initial={{ opacity: 0, y: 20 }}
@@ -2632,8 +2644,19 @@ export default function App() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-4">
                   <h3 className="font-display text-3xl text-stone-100 tracking-widest">SURVIVOR VITALS & WIT</h3>
-                  <div className="px-4 py-1 bg-torch-orange/10 border border-torch-orange/20 rounded-full">
-                    <span className="text-[10px] font-display text-torch-orange uppercase tracking-[0.2em]">Live Simulation Data</span>
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={() => loadFromGoogleSheets(false)}
+                      className="group flex items-center gap-2 px-3 py-1 bg-stone-800 hover:bg-stone-700 border border-stone-700 rounded-full transition-all disabled:opacity-50"
+                      disabled={isLoadingRegistry}
+                      title="Refresh data from Google Sheets"
+                    >
+                      <RefreshCw size={12} className={cn("text-torch-orange", isLoadingRegistry && "animate-spin")} />
+                      <span className="text-[10px] font-display text-stone-400 group-hover:text-stone-200 uppercase tracking-[0.2em]">Sync Sheet</span>
+                    </button>
+                    <div className="px-4 py-1 bg-torch-orange/10 border border-torch-orange/20 rounded-full">
+                      <span className="text-[10px] font-display text-torch-orange uppercase tracking-[0.2em]">Live Simulation Data</span>
+                    </div>
                   </div>
                 </div>
 
